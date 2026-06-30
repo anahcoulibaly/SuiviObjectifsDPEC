@@ -8,49 +8,51 @@ interface Props {
 }
 
 const TENDANCE_ICONS = {
-  hausse: <TrendingUp size={14} className="text-green-500" />,
-  baisse: <TrendingDown size={14} className="text-red-500" />,
-  stable: <Minus size={14} className="text-yellow-500" />,
+  hausse:        <TrendingUp size={14} style={{ color: '#00C48C' }} />,
+  baisse:        <TrendingDown size={14} style={{ color: '#E63946' }} />,
+  stable:        <Minus size={14} style={{ color: '#FF6B35' }} />,
   non_renseigne: <Minus size={14} className="text-slate-300" />,
 };
 
 function KPIEditModal({ kpi, onClose, onSave }: { kpi: KPI; onClose: () => void; onSave: (k: KPI) => void }) {
   const [form, setForm] = useState<KPI>({ ...kpi });
+  const inputClass = "w-full border border-slate-200 rounded-syn px-3 py-2 text-sm font-body bg-white focus:outline-none focus:ring-2 focus:ring-syn-primary/30";
+
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-          <h3 className="font-semibold text-slate-800 text-sm">Saisir les valeurs KPI</h3>
-          <button onClick={onClose}><X size={18} className="text-slate-400" /></button>
+      <div className="bg-white rounded-syn-lg shadow-syn-lg w-full max-w-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100" style={{ background: '#EDE9F6' }}>
+          <h3 className="font-display font-semibold text-syn-primary text-sm">Saisir les valeurs KPI</h3>
+          <button onClick={onClose}><X size={18} className="text-syn-text-muted" /></button>
         </div>
         <div className="px-6 py-5 space-y-4">
-          <div className="bg-slate-50 rounded-lg p-3">
-            <p className="text-xs font-medium text-slate-500">{form.axe}</p>
-            <p className="text-sm font-medium text-slate-800 mt-1">{form.libelle}</p>
-            <p className="text-xs text-blue-600 mt-0.5">Cible : {form.cible}</p>
+          <div className="rounded-syn-md p-3" style={{ background: '#F5F4F8' }}>
+            <p className="text-xs font-display font-semibold text-syn-text-muted">{form.axe}</p>
+            <p className="text-sm font-body font-medium text-syn-text mt-1">{form.libelle}</p>
+            <p className="text-xs font-display font-semibold mt-0.5" style={{ color: '#4B2882' }}>Cible : {form.cible}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             {(['T1', 'T2', 'T3', 'T4'] as const).map(t => (
               <div key={t}>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">{t}</label>
+                <label className="block text-xs font-display font-semibold text-syn-text-sub mb-1">{t}</label>
                 <input
                   type="text"
                   value={form[`valeur${t}` as `valeur${typeof t}`]}
                   onChange={e => setForm(f => ({ ...f, [`valeur${t}`]: e.target.value }))}
                   placeholder="ex: 87%"
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                  className={inputClass}
                 />
               </div>
             ))}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Tendance</label>
+            <label className="block text-xs font-display font-semibold text-syn-text-sub mb-1.5">Tendance</label>
             <select
               value={form.tendance}
               onChange={e => setForm(f => ({ ...f, tendance: e.target.value as KPI['tendance'] }))}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white"
+              className={inputClass}
             >
               <option value="non_renseigne">Non renseigné</option>
               <option value="hausse">En hausse ↑</option>
@@ -60,8 +62,14 @@ function KPIEditModal({ kpi, onClose, onSave }: { kpi: KPI; onClose: () => void;
           </div>
 
           <div className="flex gap-3 pt-1">
-            <button onClick={onClose} className="flex-1 border border-slate-200 rounded-lg py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">Annuler</button>
-            <button onClick={() => onSave(form)} className="flex-1 bg-blue-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-blue-700">Enregistrer</button>
+            <button onClick={onClose} className="flex-1 border border-slate-200 rounded-syn py-2 text-sm font-body font-medium text-syn-text-sub hover:bg-syn-bg-alt transition-colors">Annuler</button>
+            <button
+              onClick={() => onSave(form)}
+              className="flex-1 text-white rounded-syn py-2 text-sm font-display font-semibold transition-colors"
+              style={{ background: '#4B2882' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#2D1557')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#4B2882')}
+            >Enregistrer</button>
           </div>
         </div>
       </div>
@@ -84,29 +92,29 @@ export default function KPIsPage({ data, onUpdateKPI }: Props) {
     <div className="p-6 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-800">Tableau de bord KPIs 2026</h2>
-          <p className="text-sm text-slate-500 mt-0.5">{renseignes} / {data.kpis.length} KPIs renseignés</p>
+          <h2 className="text-xl font-display font-bold text-syn-text">Tableau de bord KPIs 2026</h2>
+          <p className="text-sm font-body text-syn-text-muted mt-0.5">{renseignes} / {data.kpis.length} KPIs renseignés</p>
         </div>
-        <div className="text-xs text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg">
+        <div className="text-xs font-body text-syn-text-muted rounded-syn-md px-3 py-1.5" style={{ background: '#EDE9F6', color: '#4B2882' }}>
           À renseigner à chaque fin de trimestre
         </div>
       </div>
 
       {Object.entries(grouped).map(([axe, kpis]) => (
-        <div key={axe} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-5 py-3 bg-slate-50 border-b border-slate-200">
-            <h3 className="text-sm font-semibold text-slate-700">{axe}</h3>
+        <div key={axe} className="bg-white rounded-syn-md border border-slate-200 overflow-hidden shadow-syn-sm">
+          <div className="px-5 py-3 border-b border-slate-200" style={{ background: '#4B2882' }}>
+            <h3 className="text-sm font-display font-semibold text-white">{axe}</h3>
           </div>
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">
-                <th className="text-left px-5 py-2.5 font-semibold">KPI</th>
-                <th className="text-center px-3 py-2.5 font-semibold">Cible</th>
-                <th className="text-center px-3 py-2.5 font-semibold">T1</th>
-                <th className="text-center px-3 py-2.5 font-semibold">T2</th>
-                <th className="text-center px-3 py-2.5 font-semibold">T3</th>
-                <th className="text-center px-3 py-2.5 font-semibold">T4</th>
-                <th className="text-center px-3 py-2.5 font-semibold">Tendance</th>
+              <tr className="text-xs uppercase tracking-wide border-b border-slate-100" style={{ background: '#EDE9F6' }}>
+                <th className="text-left px-5 py-2.5 font-display font-semibold text-syn-primary">KPI</th>
+                <th className="text-center px-3 py-2.5 font-display font-semibold text-syn-primary">Cible</th>
+                <th className="text-center px-3 py-2.5 font-display font-semibold text-syn-primary">T1</th>
+                <th className="text-center px-3 py-2.5 font-display font-semibold text-syn-primary">T2</th>
+                <th className="text-center px-3 py-2.5 font-display font-semibold text-syn-primary">T3</th>
+                <th className="text-center px-3 py-2.5 font-display font-semibold text-syn-primary">T4</th>
+                <th className="text-center px-3 py-2.5 font-display font-semibold text-syn-primary">Tendance</th>
                 <th className="px-4 py-2.5" />
               </tr>
             </thead>
@@ -114,15 +122,15 @@ export default function KPIsPage({ data, onUpdateKPI }: Props) {
               {kpis.map(kpi => {
                 const hasData = kpi.valeurT1 || kpi.valeurT2 || kpi.valeurT3 || kpi.valeurT4;
                 return (
-                  <tr key={kpi.id} className="border-t border-slate-50 hover:bg-slate-50">
-                    <td className="px-5 py-3 text-slate-800 max-w-[320px]">
+                  <tr key={kpi.id} className="border-t border-slate-50 hover:bg-syn-bg-alt transition-colors">
+                    <td className="px-5 py-3 text-syn-text max-w-[320px] font-body">
                       <span className="line-clamp-2">{kpi.libelle}</span>
                     </td>
-                    <td className="px-3 py-3 text-center text-xs font-semibold text-blue-600">{kpi.cible}</td>
+                    <td className="px-3 py-3 text-center text-xs font-display font-semibold" style={{ color: '#4B2882' }}>{kpi.cible}</td>
                     {(['valeurT1', 'valeurT2', 'valeurT3', 'valeurT4'] as const).map(field => (
                       <td key={field} className="px-3 py-3 text-center text-xs">
                         {kpi[field] ? (
-                          <span className="font-semibold text-slate-700">{kpi[field]}</span>
+                          <span className="font-mono font-semibold text-syn-text-sub">{kpi[field]}</span>
                         ) : (
                           <span className="text-slate-300">–</span>
                         )}
@@ -136,7 +144,8 @@ export default function KPIsPage({ data, onUpdateKPI }: Props) {
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => setSelected(kpi)}
-                        className={`${hasData ? 'text-green-500' : 'text-slate-400'} hover:text-blue-600 transition-colors`}
+                        className="transition-colors"
+                        style={{ color: hasData ? '#00C48C' : '#9A90A8' }}
                         title="Saisir valeurs"
                       >
                         {hasData ? <Check size={14} /> : <Edit2 size={14} />}

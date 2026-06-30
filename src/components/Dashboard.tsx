@@ -8,17 +8,17 @@ interface DashboardProps {
 }
 
 const DEPT_COLORS: Record<Departement, string> = {
-  BGP: '#2563EB',
-  DTD: '#0891B2',
-  CX: '#059669',
+  BGP: '#4B2882',
+  DTD: '#6B3FA0',
+  CX: '#C0297A',
 };
 
 const STATUT_COLORS: Record<Statut, string> = {
-  non_commence: '#94a3b8',
-  en_cours: '#3b82f6',
-  termine: '#22c55e',
-  retarde: '#f97316',
-  annule: '#ef4444',
+  non_commence: '#9A90A8',
+  en_cours:     '#4B2882',
+  termine:      '#00C48C',
+  retarde:      '#FF6B35',
+  annule:       '#E63946',
 };
 
 const STATUT_LABELS: Record<Statut, string> = {
@@ -39,16 +39,16 @@ function TargetIcon({ size, className }: { size: number; className?: string }) {
   );
 }
 
-function StatCard({ label, value, sub, icon, color }: { label: string; value: string | number; sub?: string; icon: React.ReactNode; color: string }) {
+function StatCard({ label, value, sub, icon, bg }: { label: string; value: string | number; sub?: string; icon: React.ReactNode; bg: string }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-5 flex items-start gap-4">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${color}`}>
+    <div className="bg-white rounded-syn-md border border-slate-200 p-5 flex items-start gap-4 shadow-syn-sm">
+      <div className="w-10 h-10 rounded-syn-md flex items-center justify-center flex-shrink-0" style={{ background: bg }}>
         {icon}
       </div>
       <div>
-        <p className="text-2xl font-bold text-slate-800">{value}</p>
-        <p className="text-sm font-medium text-slate-600">{label}</p>
-        {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
+        <p className="text-2xl font-display font-bold text-syn-text">{value}</p>
+        <p className="text-sm font-body font-medium text-syn-text-sub">{label}</p>
+        {sub && <p className="text-xs font-body text-syn-text-muted mt-0.5">{sub}</p>}
       </div>
     </div>
   );
@@ -93,8 +93,8 @@ export default function Dashboard({ data }: DashboardProps) {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-800">Tableau de bord DPEC 2026</h2>
-        <p className="text-sm text-slate-500 mt-0.5">Suivi consolidé — BGP · DTD · CX</p>
+        <h2 className="text-xl font-display font-bold text-syn-text">Tableau de bord DPEC 2026</h2>
+        <p className="text-sm font-body text-syn-text-muted mt-0.5">Suivi consolidé — BGP · DTD · CX</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -103,38 +103,38 @@ export default function Dashboard({ data }: DashboardProps) {
           value={stats.total}
           sub={`${stats.termines} terminés`}
           icon={<TargetIcon size={20} className="text-white" />}
-          color="bg-blue-600"
+          bg="#4B2882"
         />
         <StatCard
           label="Avancement moyen"
           value={`${stats.avgAvancement}%`}
           sub={`${stats.enCours} en cours`}
           icon={<TrendingUp size={20} className="text-white" />}
-          color="bg-teal-600"
+          bg="#6B3FA0"
         />
         <StatCard
           label="Taux de complétion"
           value={`${stats.tauxCompletion}%`}
           sub={`${stats.retardes} retardés`}
           icon={<CheckCircle size={20} className="text-white" />}
-          color="bg-green-600"
+          bg="#00C48C"
         />
         <StatCard
           label="Gouvernance"
           value={`${stats.tauxGouvernance}%`}
           sub={`${stats.sessionsTenues} / ${stats.totalSessionsPrevues} sessions`}
           icon={<Users size={20} className="text-white" />}
-          color="bg-purple-600"
+          bg="#C0297A"
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Avancement par département</h3>
+        <div className="bg-white rounded-syn-md border border-slate-200 p-5 shadow-syn-sm">
+          <h3 className="text-sm font-display font-semibold text-syn-text-sub mb-4">Avancement par département</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={stats.byDept} barSize={36}>
-              <XAxis dataKey="dept" tick={{ fontSize: 12 }} />
-              <YAxis domain={[0, 100]} tickFormatter={v => `${v}%`} tick={{ fontSize: 11 }} />
+              <XAxis dataKey="dept" tick={{ fontSize: 12, fontFamily: 'Open Sans' }} />
+              <YAxis domain={[0, 100]} tickFormatter={v => `${v}%`} tick={{ fontSize: 11, fontFamily: 'Open Sans' }} />
               <Tooltip formatter={(v) => [`${v}%`, 'Avancement moyen']} />
               <Bar dataKey="avg" radius={[4, 4, 0, 0]}>
                 {stats.byDept.map(entry => (
@@ -145,8 +145,8 @@ export default function Dashboard({ data }: DashboardProps) {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Répartition par statut</h3>
+        <div className="bg-white rounded-syn-md border border-slate-200 p-5 shadow-syn-sm">
+          <h3 className="text-sm font-display font-semibold text-syn-text-sub mb-4">Répartition par statut</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
@@ -164,7 +164,7 @@ export default function Dashboard({ data }: DashboardProps) {
               </Pie>
               <Legend
                 formatter={(value) => STATUT_LABELS[value as Statut] || value}
-                wrapperStyle={{ fontSize: '11px' }}
+                wrapperStyle={{ fontSize: '11px', fontFamily: 'Open Sans' }}
               />
               <Tooltip formatter={(v, name) => [v, STATUT_LABELS[name as Statut] || name]} />
             </PieChart>
@@ -172,34 +172,34 @@ export default function Dashboard({ data }: DashboardProps) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-syn-md border border-slate-200 overflow-hidden shadow-syn-sm">
         <div className="px-5 py-4 border-b border-slate-100">
-          <h3 className="text-sm font-semibold text-slate-700">Synthèse par département</h3>
+          <h3 className="text-sm font-display font-semibold text-syn-text-sub">Synthèse par département</h3>
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-slate-50">
-              <th className="text-left px-5 py-3 font-medium text-slate-600">Département</th>
-              <th className="text-center px-4 py-3 font-medium text-slate-600">Objectifs</th>
-              <th className="text-center px-4 py-3 font-medium text-slate-600">Terminés</th>
-              <th className="text-center px-4 py-3 font-medium text-slate-600">Avancement</th>
-              <th className="px-5 py-3 font-medium text-slate-600">Progression</th>
+            <tr style={{ background: '#EDE9F6' }}>
+              <th className="text-left px-5 py-3 font-display font-semibold text-syn-primary text-xs uppercase tracking-wide">Département</th>
+              <th className="text-center px-4 py-3 font-display font-semibold text-syn-primary text-xs uppercase tracking-wide">Objectifs</th>
+              <th className="text-center px-4 py-3 font-display font-semibold text-syn-primary text-xs uppercase tracking-wide">Terminés</th>
+              <th className="text-center px-4 py-3 font-display font-semibold text-syn-primary text-xs uppercase tracking-wide">Avancement</th>
+              <th className="px-5 py-3 font-display font-semibold text-syn-primary text-xs uppercase tracking-wide">Progression</th>
             </tr>
           </thead>
           <tbody>
             {stats.byDept.map(({ dept, total, done, avg }) => (
-              <tr key={dept} className="border-t border-slate-100">
-                <td className="px-5 py-3 font-semibold">
+              <tr key={dept} className="border-t border-slate-100 hover:bg-syn-bg-alt transition-colors">
+                <td className="px-5 py-3 font-body font-semibold">
                   <span className="inline-flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: DEPT_COLORS[dept as Departement] }} />
                     {dept}
                   </span>
                 </td>
-                <td className="text-center px-4 py-3 text-slate-700">{total}</td>
-                <td className="text-center px-4 py-3 text-slate-700">{done}</td>
-                <td className="text-center px-4 py-3 font-semibold" style={{ color: DEPT_COLORS[dept as Departement] }}>{avg}%</td>
+                <td className="text-center px-4 py-3 font-body text-syn-text-sub">{total}</td>
+                <td className="text-center px-4 py-3 font-body text-syn-text-sub">{done}</td>
+                <td className="text-center px-4 py-3 font-display font-semibold" style={{ color: DEPT_COLORS[dept as Departement] }}>{avg}%</td>
                 <td className="px-5 py-3">
-                  <div className="w-full bg-slate-100 rounded-full h-2">
+                  <div className="w-full rounded-full h-2" style={{ background: '#EDE9F6' }}>
                     <div
                       className="h-2 rounded-full transition-all"
                       style={{ width: `${avg}%`, backgroundColor: DEPT_COLORS[dept as Departement] }}
@@ -213,11 +213,11 @@ export default function Dashboard({ data }: DashboardProps) {
       </div>
 
       {stats.retardes > 0 && (
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-start gap-3">
-          <AlertTriangle size={18} className="text-orange-500 flex-shrink-0 mt-0.5" />
+        <div className="rounded-syn-md p-4 flex items-start gap-3" style={{ background: '#FFF2EE', border: '1px solid #FFCDB4' }}>
+          <AlertTriangle size={18} style={{ color: '#FF6B35' }} className="flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-orange-800">{stats.retardes} objectif{stats.retardes > 1 ? 's' : ''} en retard</p>
-            <p className="text-xs text-orange-600 mt-0.5">Consultez la page Objectifs pour voir les détails.</p>
+            <p className="text-sm font-display font-semibold" style={{ color: '#CC4400' }}>{stats.retardes} objectif{stats.retardes > 1 ? 's' : ''} en retard</p>
+            <p className="text-xs font-body mt-0.5" style={{ color: '#FF6B35' }}>Consultez la page Objectifs pour voir les détails.</p>
           </div>
         </div>
       )}
